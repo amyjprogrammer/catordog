@@ -1,0 +1,9 @@
+
+body {
+  background-image: url(/static/images/cat-dog.png);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: bottom center;
+
+
+}

@@ -1,0 +1,23 @@
+{% extends "vote/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<link rel="stylesheet" text='text/css' href="{% static '/css/main.css' %}">
+
+  <h2>Polls for Pet Friends.</h2>
+  {% if questions %}
+    {% for question in questions %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <p class="lead">{{question.question_text}}
+           <a class="btn btn-primary btn-sm" href="{% url "vote:vote" question.id %}" role='button'>Vote</a>
+            <a class="btn btn-outline-primary btn-sm" href="{% url "vote:results" question.id %}" role='button'>Results</a>
+          </p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No polls available at this time.</p>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends 'vote/base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<link rel="stylesheet" text='text/css' href="{% static '/css/main.css' %}">
+
+{% if error_message %}
+<p class="alert alert-danger"><strong>{{ error_message }}</strong></p>
+{% endif %}
+
+<a class="btn btn-secondary btn-sm" href="{% url "vote:home" %}" role='button'>Back to Questions</a>
+<h1 class="text-center mb-3">{{ question.question_text }}</h1>
+
+
+  <form action="{% url 'vote:vote' question.id %}" method="post">
+  {% csrf_token %}
+  {% for choice in question.choice_set.all %}
+    <input type="radio" name="choice" id= "choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+    <br>
+  {% endfor %}
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <input type="submit" value="Vote" class="btn btn-success">
+  </div>
+  </form>
+
+
+{% endblock content %}

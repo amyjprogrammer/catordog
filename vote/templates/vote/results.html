@@ -1,0 +1,75 @@
+{% extends 'vote/base.html' %}
+
+{% block content %}
+
+<!--info so I could use Zing Chart -->
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <h3 class="text-center mb-3">{{ question.question_text }}</h3>
+
+  <ul class="list-group mb-4">
+
+    {% for choice in question.choice_set.all %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ choice.choice_text }} <span class="badge bg-success rounded-pill ">{{ choice.votes }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a class="btn btn-success" href="{% url 'vote:vote' question.id %}">Vote again?</a>
+  <a class="btn btn-secondary" href="{% url "vote:home" %}" role='button'>Back to Questions</a>
+
+<div id="myChart"></div>
+
+<script>
+
+  var state ={
+    "items":[],
+    "values":[],
+  }
+
+  var objId = "{{question.id}}"
+
+	var dataURL = `/resultsdata/${objId}/`
+  $.ajax({
+    method: 'GET',
+    url:dataURL,
+    success: function(response){
+      console.log("Response:", response)
+      for (var i in response){
+
+        var key = Object.keys(response[i])[0]
+        var value = Object.values(response[i])[0]
+
+        state.items.push(key)
+        state.values.push(value)
+      }
+      console.log('STATE:', state)
+      buildChart()
+    }
+  })
+
+  function buildChart(){
+
+    var chartData = {
+      "type": "bar",
+      "scale-x":{
+        "values":state.items
+      },
+      "series":[
+        {
+          "values":state.values
+        }
+      ]
+    }
+
+    zingchart.render({
+      id: 'myChart',
+      data: chartData,
+    });
+  }
+
+</script>
+
+{% endblock content %}
